@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bestelbevestiging</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f2f2f2;
+      padding: 2em;
+      color: #333;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 2em;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Bedankt voor je bestelling!</h2>
+    <p id="bevestigingstekst"></p>
+    <p>Tot straks bij <strong>Nijverheidsweg 8 in Ten Boer</strong> ☕️</p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const naam = params.get("naam");
+    const drankje = params.get("drankje");
+    const extras = params.get("extras");
+    const aankomsttijd = params.get("aankomsttijd");
+
+    document.getElementById("bevestigingstekst").innerHTML = `
+      Beste <strong>${naam}</strong>, je hebt een <strong>${drankje}</strong> besteld${extras ? ` met ${extras}` : ""}.<br>
+      We verwachten je rond <strong>${aankomsttijd}</strong>.
+    `;
+  </script>
+</body>
+</html>
