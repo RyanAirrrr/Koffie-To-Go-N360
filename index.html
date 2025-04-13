@@ -127,13 +127,13 @@
     };
 
     fetch("https://script.google.com/macros/s/AKfycbyhnulJH4_OO43EGp8XYaisRUSYWq2R9lZgWWmYUB4rL0xlFrd5wiJ-AKC1eVDugSob/exec", {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(bestelling)
-    });
+  method: "POST",
+  mode: "no-cors",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(bestelling)
+});
 
     // ⬇️ ⬇️ ⬇️  NA fetch, redirect naar bevestigingspagina
     window.location.href = `bevestiging.html?naam=${encodeURIComponent(naam)}&drankje=${encodeURIComponent(drankje)}&extras=${encodeURIComponent(extras.join(", "))}&aankomsttijd=${encodeURIComponent(tijdStr)}`;
