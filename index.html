@@ -81,7 +81,14 @@
        <option value="fiets">Fiets</option>
      </select>
  
+     <button onclick="toevoegenAanMandje()">Toevoegen aan mandje</button>
      <button onclick="plaatsBestelling()">Bestelling plaatsen</button>
+
+    <div id="winkelmandje" class="result" style="display:none;">
+      <h4>Winkelmandje</h4>
+      <ul id="mandjeLijst"></ul>
+      <strong id="totaalPrijs"></strong>
+    </div>
  
      <div id="resultaat" class="result" style="display:none;"></div>
    </div>
@@ -89,6 +96,81 @@
    <script>
      const bestemmingLat = 53.2987;
      const bestemmingLon = 6.7015;
+
+    <script>
+let winkelmandje = [];
+
+function toevoegenAanMandje() {
+  const naam = document.getElementById("naam").value;
+  const drankje = document.getElementById("drankje").value;
+  const email = document.getElementById("email").value;
+  const vervoer = document.getElementById("vervoer").value;
+
+  // Extras ophalen
+  const extraCheckboxes = document.querySelectorAll(".extras input[type=checkbox]:checked");
+  const extras = Array.from(extraCheckboxes).map(checkbox => checkbox.value);
+
+  // Prijs bepalen
+  const prijzen = {
+    "Espresso": 2.50,
+    "Cappuccino": 3.00,
+    "Latte Macchiato": 3.20,
+    "Americano": 2.70
+  };
+  let prijs = prijzen[drankje];
+
+  if (extras.includes("Extra shot")) prijs += 0.50;
+  if (extras.includes("Havermelk")) prijs += 0.30;
+
+  const bestelling = {
+    naam,
+    email,
+    drankje,
+    extras,
+    vervoer,
+    prijs
+  };
+
+  winkelmandje.push(bestelling);
+  toonWinkelmandje();
+}
+
+function toonWinkelmandje() {
+  const mandjeDiv = document.getElementById("winkelmandje");
+  const mandjeLijst = document.getElementById("mandjeLijst");
+  const totaalElement = document.getElementById("totaalPrijs");
+
+  mandjeDiv.style.display = "block";
+  mandjeLijst.innerHTML = "";
+
+  let totaal = 0;
+
+  winkelmandje.forEach((item, index) => {
+    const li = document.createElement("li");
+    li.textContent = `${item.drankje} (${item.extras.join(", ") || "geen extra's"}) - €${item.prijs.toFixed(2)}`;
+    mandjeLijst.appendChild(li);
+    totaal += item.prijs;
+  });
+
+  totaalElement.innerHTML = `<br/>Totaal: €${totaal.toFixed(2)}`;
+}
+
+function plaatsBestelling() {
+  if (winkelmandje.length === 0) {
+    alert("Je winkelmandje is leeg!");
+    return;
+  }
+
+  const resultaat = document.getElementById("resultaat");
+  resultaat.style.display = "block";
+  resultaat.innerHTML = `<p>Bedankt voor je bestelling, ${winkelmandje[0].naam}!</p>`;
+
+  // Hier kun je het versturen via een API of webhook (bijv. Zapier, Google Apps Script, etc.)
+  console.log("Te verzenden bestelling:", winkelmandje);
+
+  winkelmandje = [];
+  toonWinkelmandje(); // leegt het mandje
+}
  
      function plaatsBestelling() {
        const naam = document.getElementById("naam").value;
