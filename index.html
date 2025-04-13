@@ -179,8 +179,40 @@
         const email = document.getElementById("email").value;
  
  
-        if (!naam) {
+       if (!naam) {
           alert("Vul je naam in.");
+          return;
+        }
+ 
+        if (!navigator.geolocation) {
+          alert("Locatie wordt niet ondersteund.");
+          return;
+        }
+ 
+        navigator.geolocation.getCurrentPosition((pos) => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          const snelheid = vervoer === "auto" ? 50 : 15;
+          const afstand = haversine(lat, lon, bestemmingLat, bestemmingLon);
+          const tijdUren = afstand / snelheid;
+          const aankomst = new Date(Date.now() + tijdUren * 60 * 60 * 1000);
+          const tijdStr = aankomst.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
+ 
+          const resultaat = document.getElementById("resultaat");
+          resultaat.innerHTML = `
+            <strong>Bedankt, ${naam}!</strong><br>
+            Je hebt een <strong>${drankje}</strong> besteld${extras.length > 0 ? ' met ' + extras.join(', ') : ''}.<br>
+            We verwachten je rond <strong>${tijdStr}</strong>.<br><br>
+            Tot zo bij Nijverheidsweg 8 in Ten Boer!
+          `;
+          resultaat.style.display = "block";
+ 
+ 
+          const bestelling = {
+            naam: naam,
+            drankje: drankje,
+            extras: extras,
+            vervoer: vervoer,
             aankomsttijd: tijdStr,
             email: email 
           };
