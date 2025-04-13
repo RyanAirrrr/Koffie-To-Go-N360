@@ -91,63 +91,57 @@
     const bestemmingLat = 53.2987;
     const bestemmingLon = 6.7015;
 
-    function plaatsBestelling() {
-      const naam = document.getElementById("naam").value;
-      const drankje = document.getElementById("drankje").value;
-      const vervoer = document.getElementById("vervoer").value;
-      const extras = Array.from(document.querySelectorAll('.extras input:checked')).map(e => e.value);
-      const email = document.getElementById("email").value;
+  function plaatsBestelling() {
+    const naam = document.getElementById("naam").value;
+    const email = document.getElementById("email").value;
+    const drankje = document.getElementById("drankje").value;
+    const vervoer = document.getElementById("vervoer").value;
+    const extras = Array.from(document.querySelectorAll('.extras input:checked')).map(e => e.value);
 
-      if (!naam) {
-        alert("Vul je naam in.");
-        return;
-      }
+  if (!naam) {
+    alert("Vul je naam in.");
+    return;
+  }
 
-      if (!navigator.geolocation) {
-        alert("Locatie wordt niet ondersteund.");
-        return;
-      }
+  if (!navigator.geolocation) {
+    alert("Locatie wordt niet ondersteund.");
+    return;
+  }
 
-      navigator.geolocation.getCurrentPosition((pos) => {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        const snelheid = vervoer === "auto" ? 50 : 15;
-        const afstand = haversine(lat, lon, bestemmingLat, bestemmingLon);
-        const tijdUren = afstand / snelheid;
-        const aankomst = new Date(Date.now() + tijdUren * 60 * 60 * 1000);
-        const tijdStr = aankomst.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
+  navigator.geolocation.getCurrentPosition((pos) => {
+    const lat = pos.coords.latitude;
+    const lon = pos.coords.longitude;
+    const snelheid = vervoer === "auto" ? 50 : 15;
+    const afstand = haversine(lat, lon, bestemmingLat, bestemmingLon);
+    const tijdUren = afstand / snelheid;
+    const aankomst = new Date(Date.now() + tijdUren * 60 * 60 * 1000);
+    const tijdStr = aankomst.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
 
-        const resultaat = document.getElementById("resultaat");
-        resultaat.innerHTML = `
-          <strong>Bedankt, ${naam}!</strong><br>
-          Je hebt een <strong>${drankje}</strong> besteld${extras.length > 0 ? ' met ' + extras.join(', ') : ''}.<br>
-          We verwachten je rond <strong>${tijdStr}</strong>.<br><br>
-          Tot zo bij Nijverheidsweg 8 in Ten Boer!
-        `;
-        resultaat.style.display = "block";
+    const bestelling = {
+      naam: naam,
+      drankje: drankje,
+      extras: extras,
+      vervoer: vervoer,
+      aankomsttijd: tijdStr,
+      email: email // ← toegevoegd
+    };
 
+    fetch("https://script.google.com/macros/s/JE_ECHTE_SCRIPT_URL/exec", {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(bestelling)
+    });
 
-        const bestelling = {
-          naam: naam,
-          drankje: drankje,
-          extras: extras,
-          vervoer: vervoer,
-          aankomsttijd: tijdStr,
-          email: email 
-        };
-
-        fetch("https://script.google.com/macros/s/AKfycbxpZICN9JVXbVo7HKHZlMJuLLy4f2iOseBZhC-LyMpjDQcPwapXNJ6wClvHPpCi1RLv/exec", {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(bestelling)
-        });
-      }, () => {
-        alert("Kon je locatie niet ophalen.");
-      });
-    }
+    // ⬇️ ⬇️ ⬇️  NA fetch, redirect naar bevestigingspagina
+    window.location.href = `bevestiging.html?naam=${encodeURIComponent(naam)}&drankje=${encodeURIComponent(drankje)}&extras=${encodeURIComponent(extras.join(", "))}&aankomsttijd=${encodeURIComponent(tijdStr)}`;
+  }, () => {
+    alert("Kon je locatie niet ophalen.");
+  });
+}
+      
 
     function haversine(lat1, lon1, lat2, lon2) {
       const R = 6371;
