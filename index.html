@@ -1,258 +1,212 @@
 <!DOCTYPE html>
- <html lang="nl">
- <head>
-   <meta charset="UTF-8" />
-   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-   <title>Koffie To Go - Bestellen</title>
-   <style>
-     body {
-       font-family: sans-serif;
-       background-color: #f7f7f7;
-       padding: 2em;
-       color: #333;
-     }
-     .container {
-       max-width: 500px;
-       margin: auto;
-       background: white;
-       padding: 2em;
-       border-radius: 10px;
-       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-     }
-     input, select {
-       width: 100%;
-       padding: 0.6em;
-       margin: 0.5em 0 1em 0;
-       font-size: 1em;
-     }
-     .extras label {
-       display: block;
-       margin-bottom: 0.3em;
-     }
-     button {
-       width: 100%;
-       padding: 0.8em;
-       background: #333;
-       color: white;
-       border: none;
-       border-radius: 5px;
-       font-size: 1em;
-       cursor: pointer;
-     }
-     .result {
-       margin-top: 1.5em;
-       background: #e8f5e9;
-       padding: 1em;
-       border-radius: 5px;
-     }
-   </style>
- </head>
- <body>
-   <div class="container">
-     <h2>Koffie To Go</h2>
-     <p>Vul je naam in, kies je drankje en wij schatten je aankomsttijd in!</p>
+  <html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Koffie To Go - Bestellen</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background-color: #f7f7f7;
+        padding: 2em;
+        color: #333;
+      }
+      .container {
+        max-width: 500px;
+        margin: auto;
+        background: white;
+        padding: 2em;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      }
+      input, select {
+        width: 100%;
+        padding: 0.6em;
+        margin: 0.5em 0 1em 0;
+        font-size: 1em;
+      }
+      .extras label {
+        display: block;
+        margin-bottom: 0.3em;
+      }
+      button {
+        width: 100%;
+        padding: 0.8em;
+        background: #333;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1em;
+        cursor: pointer;
+      }
+      .result {
+        margin-top: 1.5em;
+        background: #e8f5e9;
+        padding: 1em;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Koffie To Go</h2>
+      <p>Vul je naam in, kies je drankje en wij schatten je aankomsttijd in!</p>
  
-     <label>Naam:</label>
-     <input type="text" id="naam" placeholder="Bijv. Lisa" />
+      <label>Naam:</label>
+      <input type="text" id="naam" placeholder="Bijv. Lisa" />
  
-     <div class="form-group">
-     <label for="email">E-mailadres:</label>
-     <input type="email" id="email" name="email" placeholder="jouw@email.nl" required>
+      <div class="form-group">
+      <label for="email">E-mailadres:</label>
+      <input type="email" id="email" name="email" placeholder="jouw@email.nl" required>
+      </div>
+ 
+      <label>Drankje:</label>
+      <select id="drankje">
+        <option value="Espresso">Espresso (€2,50)</option>
+        <option value="Cappuccino">Cappuccino (€3,00)</option>
+        <option value="Latte Macchiato">Latte Macchiato (€3,20)</option>
+        <option value="Americano">Americano (€2,70)</option>
+      </select>
+ 
+      <div class="extras">
+        <label><input type="checkbox" value="Havermelk" /> Havermelk</label>
+        <label><input type="checkbox" value="Extra shot" /> Extra shot</label>
+        <label><input type="checkbox" value="Suiker" /> Suiker</label>
+        <label><input type="checkbox" value="Melk" /> Melk</label>
+      </div>
+ 
+      <label>Vervoermiddel:</label>
+      <select id="vervoer">
+        <option value="auto">Auto</option>
+        <option value="fiets">Fiets</option>
+      </select>
+ 
+      <button onclick="toevoegenAanMandje()">Toevoegen aan mandje</button>
+      <button onclick="plaatsBestelling()">Bestelling plaatsen</button>
+ 
+     <div id="winkelmandje" class="result" style="display:none;">
+       <h4>Winkelmandje</h4>
+       <ul id="mandjeLijst"></ul>
+       <strong id="totaalPrijs"></strong>
      </div>
  
-     <label>Drankje:</label>
-     <select id="drankje">
-       <option value="Espresso">Espresso (€2,50)</option>
-       <option value="Cappuccino">Cappuccino (€3,00)</option>
-       <option value="Latte Macchiato">Latte Macchiato (€3,20)</option>
-       <option value="Americano">Americano (€2,70)</option>
-     </select>
- 
-     <div class="extras">
-       <label><input type="checkbox" value="Havermelk" /> Havermelk</label>
-       <label><input type="checkbox" value="Extra shot" /> Extra shot</label>
-       <label><input type="checkbox" value="Suiker" /> Suiker</label>
-       <label><input type="checkbox" value="Melk" /> Melk</label>
-     </div>
- 
-     <label>Vervoermiddel:</label>
-     <select id="vervoer">
-       <option value="auto">Auto</option>
-       <option value="fiets">Fiets</option>
-     </select>
- 
-     <button onclick="toevoegenAanMandje()">Toevoegen aan mandje</button>
-     <button onclick="plaatsBestelling()">Bestelling plaatsen</button>
-
-    <div id="winkelmandje" class="result" style="display:none;">
-      <h4>Winkelmandje</h4>
-      <ul id="mandjeLijst"></ul>
-      <strong id="totaalPrijs"></strong>
+      <div id="resultaat" class="result" style="display:none;"></div>
     </div>
  
-     <div id="resultaat" class="result" style="display:none;"></div>
-   </div>
+    <script>
+      const bestemmingLat = 53.2987;
+      const bestemmingLon = 6.7015;
  
-   <script>
-     const bestemmingLat = 53.2987;
-     const bestemmingLon = 6.7015;
-
-     let winkelmandje = [];
-
-function toevoegenAanMandje() {
-  const naam = document.getElementById("naam").value;
-  const drankje = document.getElementById("drankje").value;
-  const email = document.getElementById("email").value;
-  const vervoer = document.getElementById("vervoer").value;
-
-  // Extras ophalen
-  const extraCheckboxes = document.querySelectorAll(".extras input[type=checkbox]:checked");
-  const extras = Array.from(extraCheckboxes).map(checkbox => checkbox.value);
-
-  // Prijs bepalen
-  const prijzen = {
-    "Espresso": 2.50,
-    "Cappuccino": 3.00,
-    "Latte Macchiato": 3.20,
-    "Americano": 2.70
-  };
-  let prijs = prijzen[drankje];
-
-  if (extras.includes("Extra shot")) prijs += 0.50;
-  if (extras.includes("Havermelk")) prijs += 0.30;
-
-  const bestelling = {
-    naam,
-    email,
-    drankje,
-    extras,
-    vervoer,
-    prijs
-  };
-
-  winkelmandje.push(bestelling);
-  toonWinkelmandje();
-}
-
-function toonWinkelmandje() {
-  const mandjeDiv = document.getElementById("winkelmandje");
-  const mandjeLijst = document.getElementById("mandjeLijst");
-  const totaalElement = document.getElementById("totaalPrijs");
-
-  mandjeDiv.style.display = "block";
-  mandjeLijst.innerHTML = "";
-
-  let totaal = 0;
-
-  winkelmandje.forEach((item, index) => {
-    const li = document.createElement("li");
-    li.textContent = `${item.drankje} (${item.extras.join(", ") || "geen extra's"}) - €${item.prijs.toFixed(2)}`;
-    mandjeLijst.appendChild(li);
-    totaal += item.prijs;
-  });
-
-  totaalElement.innerHTML = `<br/>Totaal: €${totaal.toFixed(2)}`;
-}
-
-function plaatsBestelling() {
-  if (winkelmandje.length === 0) {
-    alert("Je winkelmandje is leeg!");
-    return;
-  }
-
-  const resultaat = document.getElementById("resultaat");
-  resultaat.style.display = "block";
-  resultaat.innerHTML = `<p>Bedankt voor je bestelling, ${winkelmandje[0].naam}!</p>`;
-
-  // Hier kun je het versturen via een API of webhook (bijv. Zapier, Google Apps Script, etc.)
-  console.log("Te verzenden bestelling:", winkelmandje);
-
-  winkelmandje = [];
-  toonWinkelmandje(); // leegt het mandje
-}
+      let winkelmandje = [];
  
-     function plaatsBestelling() {
-       const naam = document.getElementById("naam").value;
-       const drankje = document.getElementById("drankje").value;
-       const vervoer = document.getElementById("vervoer").value;
-       const extras = Array.from(document.querySelectorAll('.extras input:checked')).map(e => e.value);
-       const email = document.getElementById("email").value;
-
-      if (winkelmandje.length === 0) {
-        alert("Je winkelmandje is leeg!");
-        return;
+ function toevoegenAanMandje() {
+   const naam = document.getElementById("naam").value;
+   const drankje = document.getElementById("drankje").value;
+   const email = document.getElementById("email").value;
+   const vervoer = document.getElementById("vervoer").value;
+ 
+   // Extras ophalen
+   const extraCheckboxes = document.querySelectorAll(".extras input[type=checkbox]:checked");
+   const extras = Array.from(extraCheckboxes).map(checkbox => checkbox.value);
+ 
+   // Prijs bepalen
+   const prijzen = {
+     "Espresso": 2.50,
+     "Cappuccino": 3.00,
+     "Latte Macchiato": 3.20,
+     "Americano": 2.70
+   };
+   let prijs = prijzen[drankje];
+ 
+   if (extras.includes("Extra shot")) prijs += 0.50;
+   if (extras.includes("Havermelk")) prijs += 0.30;
+ 
+   const bestelling = {
+     naam,
+     email,
+     drankje,
+     extras,
+     vervoer,
+     prijs
+   };
+ 
+   winkelmandje.push(bestelling);
+   toonWinkelmandje();
+ }
+ 
+ function toonWinkelmandje() {
+   const mandjeDiv = document.getElementById("winkelmandje");
+   const mandjeLijst = document.getElementById("mandjeLijst");
+   const totaalElement = document.getElementById("totaalPrijs");
+ 
+   mandjeDiv.style.display = "block";
+   mandjeLijst.innerHTML = "";
+ 
+   let totaal = 0;
+ 
+   winkelmandje.forEach((item, index) => {
+     const li = document.createElement("li");
+     li.textContent = `${item.drankje} (${item.extras.join(", ") || "geen extra's"}) - €${item.prijs.toFixed(2)}`;
+     mandjeLijst.appendChild(li);
+     totaal += item.prijs;
+   });
+ 
+   totaalElement.innerHTML = `<br/>Totaal: €${totaal.toFixed(2)}`;
+ }
+ 
+ function plaatsBestelling() {
+   if (winkelmandje.length === 0) {
+     alert("Je winkelmandje is leeg!");
+     return;
+   }
+ 
+   const resultaat = document.getElementById("resultaat");
+   resultaat.style.display = "block";
+   resultaat.innerHTML = `<p>Bedankt voor je bestelling, ${winkelmandje[0].naam}!</p>`;
+ 
+   // Hier kun je het versturen via een API of webhook (bijv. Zapier, Google Apps Script, etc.)
+   console.log("Te verzenden bestelling:", winkelmandje);
+ 
+   winkelmandje = [];
+   toonWinkelmandje(); // leegt het mandje
+ }
+ 
+      function plaatsBestelling() {
+        const naam = document.getElementById("naam").value;
+        const drankje = document.getElementById("drankje").value;
+        const vervoer = document.getElementById("vervoer").value;
+        const extras = Array.from(document.querySelectorAll('.extras input:checked')).map(e => e.value);
+        const email = document.getElementById("email").value;
+ 
+ 
+        if (!naam) {
+          alert("Vul je naam in.");
+            aankomsttijd: tijdStr,
+            email: email 
+          };
+  
+          fetch("https://script.google.com/macros/s/AKfycbw_suD6zdhtNPXZ8LEHt8wGDQHIzZEafjCaf5iLGFO_p-YtFXyItfFlHJTWlGwJN-T0/exec", {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(bestelling)
+          });
+        }, () => {
+          alert("Kon je locatie niet ophalen.");
+        });
       }
  
-       if (!naam) {
-         alert("Vul je naam in.");
-         return;
-       }
- 
-       if (!navigator.geolocation) {
-         alert("Locatie wordt niet ondersteund.");
-         return;
-       }
- 
-       navigator.geolocation.getCurrentPosition((pos) => {
-         const lat = pos.coords.latitude;
-         const lon = pos.coords.longitude;
-         const snelheid = vervoer === "auto" ? 50 : 15;
-         const afstand = haversine(lat, lon, bestemmingLat, bestemmingLon);
-         const tijdUren = afstand / snelheid;
-         const aankomst = new Date(Date.now() + tijdUren * 60 * 60 * 1000);
-         const tijdStr = aankomst.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
- 
-         const resultaat = document.getElementById("resultaat");
-         resultaat.innerHTML = `
-           <strong>Bedankt, ${naam}!</strong><br>
-           Je hebt een <strong>${drankje}</strong> besteld${extras.length > 0 ? ' met ' + extras.join(', ') : ''}.<br>
-           We verwachten je rond <strong>${tijdStr}</strong>.<br><br>
-           Tot zo bij Nijverheidsweg 8 in Ten Boer!
-         `;
-         resultaat.style.display = "block";
- 
- 
-         const bestelling = {
-           naam: naam,
-           drankje: drankje,
-           extras: extras,
-           vervoer: vervoer,
-           aankomsttijd: tijdStr,
-           email: email 
-         };
-
-
-        
-  fetch("https://script.google.com/macros/s/AKfycby0Awh0zD-JWGaZTryuK1cXytbLOUAJxI6hNUV3PeX9YhMRQp3ESovPSNW_0oeW8QcW/exec", {
-    method: "POST",
-    body: JSON.stringify(winkelmandje),
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-  .then(res => res.text())
-  .then(data => {
-    alert("Bestelling geplaatst!");
-    document.getElementById("resultaat").style.display = "block";
-    document.getElementById("resultaat").innerHTML = "<p>Je bestelling is ontvangen!</p>";
-    winkelmandje = [];
-    toonWinkelmandje(); // Leeg de UI
-  });
-}
-       }, () => {
-         alert("Kon je locatie niet ophalen.");
-       });
-     }
- 
-     function haversine(lat1, lon1, lat2, lon2) {
-       const R = 6371;
-       const dLat = (lat2 - lat1) * Math.PI / 180;
-       const dLon = (lon2 - lon1) * Math.PI / 180;
-       const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                 Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                 Math.sin(dLon/2) * Math.sin(dLon/2);
-       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-       return R * c;
-     }
-   </script>
- </body>
+      function haversine(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                  Math.sin(dLon/2) * Math.sin(dLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+      }
+    </script>
+  </body>
