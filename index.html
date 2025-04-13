@@ -1,97 +1,154 @@
 <!DOCTYPE html>
-  <html lang="nl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Koffie To Go - Bestellen</title>
-    <style>
-      body {
-        font-family: sans-serif;
-        background-color: #f7f7f7;
-        padding: 2em;
-        color: #333;
-      }
-      .container {
-        max-width: 500px;
-        margin: auto;
-        background: white;
-        padding: 2em;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      }
-      input, select {
-        width: 100%;
-        padding: 0.6em;
-        margin: 0.5em 0 1em 0;
-        font-size: 1em;
-      }
-      .extras label {
-        display: block;
-        margin-bottom: 0.3em;
-      }
-      button {
-        width: 100%;
-        padding: 0.8em;
-        background: #333;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 1em;
-        cursor: pointer;
-      }
-      .result {
-        margin-top: 1.5em;
-        background: #e8f5e9;
-        padding: 1em;
-        border-radius: 5px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h2>Koffie To Go</h2>
-      <p>Vul je naam in, kies je drankje en wij schatten je aankomsttijd in!</p>
- 
-      <label>Naam:</label>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Koffie To Go - Bestellen</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f2f2f2;
+      padding: 2em;
+      color: #333;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 2em;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 0.5em;
+    }
+
+    p {
+      text-align: center;
+      margin-bottom: 2em;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.3em;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.75em;
+      margin-bottom: 1.2em;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .form-group {
+      margin-bottom: 1.5em;
+    }
+
+    .extras {
+      margin-bottom: 1.5em;
+    }
+
+    .extras label {
+      font-weight: normal;
+      display: block;
+      margin-left: 0.5em;
+      margin-bottom: 0.4em;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.9em;
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 0.5em;
+    }
+
+    button:hover {
+      background: #555;
+    }
+
+    .result {
+      margin-top: 2em;
+      background: #e8f5e9;
+      padding: 1.2em;
+      border-radius: 8px;
+    }
+
+    #winkelmandje ul {
+      padding-left: 1em;
+    }
+
+    #totaalPrijs {
+      display: block;
+      margin-top: 1em;
+      font-size: 1.1em;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Koffie To Go</h2>
+    <p>Vul je naam in, kies je drankje en wij schatten je aankomsttijd in!</p>
+
+    <div class="form-group">
+      <label for="naam">Naam:</label>
       <input type="text" id="naam" placeholder="Bijv. Lisa" />
- 
-      <div class="form-group">
+    </div>
+
+    <div class="form-group">
       <label for="email">E-mailadres:</label>
       <input type="email" id="email" name="email" placeholder="jouw@email.nl" required>
-      </div>
- 
-      <label>Drankje:</label>
+    </div>
+
+    <div class="form-group">
+      <label for="drankje">Drankje:</label>
       <select id="drankje">
         <option value="Espresso">Espresso (€2,50)</option>
         <option value="Cappuccino">Cappuccino (€3,00)</option>
         <option value="Latte Macchiato">Latte Macchiato (€3,20)</option>
         <option value="Americano">Americano (€2,70)</option>
       </select>
- 
-      <div class="extras">
-        <label><input type="checkbox" value="Havermelk" /> Havermelk</label>
-        <label><input type="checkbox" value="Extra shot" /> Extra shot</label>
-        <label><input type="checkbox" value="Suiker" /> Suiker</label>
-        <label><input type="checkbox" value="Melk" /> Melk</label>
-      </div>
- 
-      <label>Vervoermiddel:</label>
+    </div>
+
+    <div class="form-group extras">
+      <label>Extra's:</label>
+      <label><input type="checkbox" value="Havermelk" /> Havermelk</label>
+      <label><input type="checkbox" value="Extra shot" /> Extra shot</label>
+      <label><input type="checkbox" value="Suiker" /> Suiker</label>
+      <label><input type="checkbox" value="Melk" /> Melk</label>
+    </div>
+
+    <div class="form-group">
+      <label for="vervoer">Vervoermiddel:</label>
       <select id="vervoer">
         <option value="auto">Auto</option>
         <option value="fiets">Fiets</option>
       </select>
- 
-      <button onclick="toevoegenAanMandje()">Toevoegen aan mandje</button>
-      <button onclick="plaatsBestelling()">Bestelling plaatsen</button>
- 
-     <div id="winkelmandje" class="result" style="display:none;">
-       <h4>Winkelmandje</h4>
-       <ul id="mandjeLijst"></ul>
-       <strong id="totaalPrijs"></strong>
-     </div>
- 
-      <div id="resultaat" class="result" style="display:none;"></div>
     </div>
+
+    <button onclick="toevoegenAanMandje()">Toevoegen aan mandje</button>
+    <button onclick="plaatsBestelling()">Bestelling plaatsen</button>
+
+    <div id="winkelmandje" class="result" style="display:none;">
+      <h4>🛒 Winkelmandje</h4>
+      <ul id="mandjeLijst"></ul>
+      <strong id="totaalPrijs"></strong>
+    </div>
+
+    <div id="resultaat" class="result" style="display:none;"></div>
+  </div>
+
  
     <script>
       const bestemmingLat = 53.2987;
