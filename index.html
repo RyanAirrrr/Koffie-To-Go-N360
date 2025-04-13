@@ -56,6 +56,11 @@
     <label>Naam:</label>
     <input type="text" id="naam" placeholder="Bijv. Lisa" />
 
+    <div class="form-group">
+    <label for="email">E-mailadres:</label>
+    <input type="email" id="email" name="email" placeholder="jouw@email.nl" required>
+    </div>
+
     <label>Drankje:</label>
     <select id="drankje">
       <option value="Espresso">Espresso (€2,50)</option>
@@ -91,6 +96,7 @@
       const drankje = document.getElementById("drankje").value;
       const vervoer = document.getElementById("vervoer").value;
       const extras = Array.from(document.querySelectorAll('.extras input:checked')).map(e => e.value);
+      const email = document.getElementById("email").value;
 
       if (!naam) {
         alert("Vul je naam in.");
@@ -120,15 +126,17 @@
         `;
         resultaat.style.display = "block";
 
+
         const bestelling = {
           naam: naam,
           drankje: drankje,
           extras: extras,
           vervoer: vervoer,
-          aankomsttijd: tijdStr
+          aankomsttijd: tijdStr,
+          email: email 
         };
 
-        fetch("https://script.google.com/macros/s/AKfycbwKyIqvbfNioJIYMxFyfZkVYDe7zrU3-E-33xXyrbAL-uiA4u0TszLiMcxF6_r_43H1/exec", {
+        fetch("https://script.google.com/macros/s/AKfycbwp1jC3mkexpf4p-tzjUGDEMNFfgZvuhzvgXqf5v7rg6_TjBssC_HenM9n51oGdrHi7/exec", {
           method: "POST",
           mode: "no-cors",
           headers: {
