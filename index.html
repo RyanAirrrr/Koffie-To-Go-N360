@@ -177,6 +177,11 @@ function plaatsBestelling() {
        const vervoer = document.getElementById("vervoer").value;
        const extras = Array.from(document.querySelectorAll('.extras input:checked')).map(e => e.value);
        const email = document.getElementById("email").value;
+
+      if (winkelmandje.length === 0) {
+        alert("Je winkelmandje is leeg!");
+        return;
+      }
  
        if (!naam) {
          alert("Vul je naam in.");
@@ -215,15 +220,25 @@ function plaatsBestelling() {
            aankomsttijd: tijdStr,
            email: email 
          };
- 
-         fetch("https://script.google.com/macros/s/AKfycbw_suD6zdhtNPXZ8LEHt8wGDQHIzZEafjCaf5iLGFO_p-YtFXyItfFlHJTWlGwJN-T0/exec", {
-           method: "POST",
-           mode: "no-cors",
-           headers: {
-             "Content-Type": "application/json"
-           },
-           body: JSON.stringify(bestelling)
-         });
+
+
+        
+  fetch("https://script.google.com/macros/s/AKfycby0Awh0zD-JWGaZTryuK1cXytbLOUAJxI6hNUV3PeX9YhMRQp3ESovPSNW_0oeW8QcW/exec", {
+    method: "POST",
+    body: JSON.stringify(winkelmandje),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .then(res => res.text())
+  .then(data => {
+    alert("Bestelling geplaatst!");
+    document.getElementById("resultaat").style.display = "block";
+    document.getElementById("resultaat").innerHTML = "<p>Je bestelling is ontvangen!</p>";
+    winkelmandje = [];
+    toonWinkelmandje(); // Leeg de UI
+  });
+}
        }, () => {
          alert("Kon je locatie niet ophalen.");
        });
