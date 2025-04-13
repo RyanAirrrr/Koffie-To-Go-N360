@@ -1,158 +1,162 @@
-
 <!DOCTYPE html>
-<html lang="nl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Koffie To Go - Bestellen</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background-color: #f7f7f7;
-      padding: 2em;
-      color: #333;
-    }
-    .container {
-      max-width: 500px;
-      margin: auto;
-      background: white;
-      padding: 2em;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    input, select {
-      width: 100%;
-      padding: 0.6em;
-      margin: 0.5em 0 1em 0;
-      font-size: 1em;
-    }
-    .extras label {
-      display: block;
-      margin-bottom: 0.3em;
-    }
-    button {
-      width: 100%;
-      padding: 0.8em;
-      background: #333;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 1em;
-      cursor: pointer;
-    }
-    .result {
-      margin-top: 1.5em;
-      background: #e8f5e9;
-      padding: 1em;
-      border-radius: 5px;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>Koffie To Go</h2>
-    <p>Vul je naam in, kies je drankje en wij schatten je aankomsttijd in!</p>
-    
-    <label>Naam:</label>
-    <input type="text" id="naam" placeholder="Bijv. Lisa" />
-
-    <div class="form-group">
-    <label for="email">E-mailadres:</label>
-    <input type="email" id="email" name="email" placeholder="jouw@email.nl" required>
-    </div>
-
-    <label>Drankje:</label>
-    <select id="drankje">
-      <option value="Espresso">Espresso (€2,50)</option>
-      <option value="Cappuccino">Cappuccino (€3,00)</option>
-      <option value="Latte Macchiato">Latte Macchiato (€3,20)</option>
-      <option value="Americano">Americano (€2,70)</option>
-    </select>
-
-    <div class="extras">
-      <label><input type="checkbox" value="Havermelk" /> Havermelk</label>
-      <label><input type="checkbox" value="Extra shot" /> Extra shot</label>
-      <label><input type="checkbox" value="Suiker" /> Suiker</label>
-      <label><input type="checkbox" value="Melk" /> Melk</label>
-    </div>
-
-    <label>Vervoermiddel:</label>
-    <select id="vervoer">
-      <option value="auto">Auto</option>
-      <option value="fiets">Fiets</option>
-    </select>
-
-    <button onclick="plaatsBestelling()">Bestelling plaatsen</button>
-
-    <div id="resultaat" class="result" style="display:none;"></div>
-  </div>
-
-  <script>
-    const bestemmingLat = 53.2987;
-    const bestemmingLon = 6.7015;
-
-  function plaatsBestelling() {
-    const naam = document.getElementById("naam").value;
-    const email = document.getElementById("email").value;
-    const drankje = document.getElementById("drankje").value;
-    const vervoer = document.getElementById("vervoer").value;
-    const extras = Array.from(document.querySelectorAll('.extras input:checked')).map(e => e.value);
-
-  if (!naam) {
-    alert("Vul je naam in.");
-    return;
-  }
-
-  if (!navigator.geolocation) {
-    alert("Locatie wordt niet ondersteund.");
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition((pos) => {
-    const lat = pos.coords.latitude;
-    const lon = pos.coords.longitude;
-    const snelheid = vervoer === "auto" ? 50 : 15;
-    const afstand = haversine(lat, lon, bestemmingLat, bestemmingLon);
-    const tijdUren = afstand / snelheid;
-    const aankomst = new Date(Date.now() + tijdUren * 60 * 60 * 1000);
-    const tijdStr = aankomst.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
-
-    const bestelling = {
-      naam: naam,
-      drankje: drankje,
-      extras: extras,
-      vervoer: vervoer,
-      aankomsttijd: tijdStr,
-      email: email // ← toegevoegd
-    };
-
-    fetch("https://script.google.com/macros/s/AKfycbwLOAGS4H0SzKInNJPauMBGZE74JXi_AP370TI0iSFR66gGgWhLLHqSzvYzQThT0sO0/exec", {
-  method: "POST",
-  mode: "no-cors",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(bestelling)
-});
-
-    // ⬇️ ⬇️ ⬇️  NA fetch, redirect naar bevestigingspagina
-    window.location.href = `bevestiging.html?naam=${encodeURIComponent(naam)}&drankje=${encodeURIComponent(drankje)}&extras=${encodeURIComponent(extras.join(", "))}&aankomsttijd=${encodeURIComponent(tijdStr)}`;
-  }, () => {
-    alert("Kon je locatie niet ophalen.");
-  });
-}
-      
-
-    function haversine(lat1, lon1, lat2, lon2) {
-      const R = 6371;
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                Math.sin(dLon/2) * Math.sin(dLon/2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-      return R * c;
-    }
-  </script>
-</body>
-</html>
+ <html lang="nl">
+ <head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+   <title>Koffie To Go - Bestellen</title>
+   <style>
+     body {
+       font-family: sans-serif;
+       background-color: #f7f7f7;
+       padding: 2em;
+       color: #333;
+     }
+     .container {
+       max-width: 500px;
+       margin: auto;
+       background: white;
+       padding: 2em;
+       border-radius: 10px;
+       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+     }
+     input, select {
+       width: 100%;
+       padding: 0.6em;
+       margin: 0.5em 0 1em 0;
+       font-size: 1em;
+     }
+     .extras label {
+       display: block;
+       margin-bottom: 0.3em;
+     }
+     button {
+       width: 100%;
+       padding: 0.8em;
+       background: #333;
+       color: white;
+       border: none;
+       border-radius: 5px;
+       font-size: 1em;
+       cursor: pointer;
+     }
+     .result {
+       margin-top: 1.5em;
+       background: #e8f5e9;
+       padding: 1em;
+       border-radius: 5px;
+     }
+   </style>
+ </head>
+ <body>
+   <div class="container">
+     <h2>Koffie To Go</h2>
+     <p>Vul je naam in, kies je drankje en wij schatten je aankomsttijd in!</p>
+ 
+     <label>Naam:</label>
+     <input type="text" id="naam" placeholder="Bijv. Lisa" />
+ 
+     <div class="form-group">
+     <label for="email">E-mailadres:</label>
+     <input type="email" id="email" name="email" placeholder="jouw@email.nl" required>
+     </div>
+ 
+     <label>Drankje:</label>
+     <select id="drankje">
+       <option value="Espresso">Espresso (€2,50)</option>
+       <option value="Cappuccino">Cappuccino (€3,00)</option>
+       <option value="Latte Macchiato">Latte Macchiato (€3,20)</option>
+       <option value="Americano">Americano (€2,70)</option>
+     </select>
+ 
+     <div class="extras">
+       <label><input type="checkbox" value="Havermelk" /> Havermelk</label>
+       <label><input type="checkbox" value="Extra shot" /> Extra shot</label>
+       <label><input type="checkbox" value="Suiker" /> Suiker</label>
+       <label><input type="checkbox" value="Melk" /> Melk</label>
+     </div>
+ 
+     <label>Vervoermiddel:</label>
+     <select id="vervoer">
+       <option value="auto">Auto</option>
+       <option value="fiets">Fiets</option>
+     </select>
+ 
+     <button onclick="plaatsBestelling()">Bestelling plaatsen</button>
+ 
+     <div id="resultaat" class="result" style="display:none;"></div>
+   </div>
+ 
+   <script>
+     const bestemmingLat = 53.2987;
+     const bestemmingLon = 6.7015;
+ 
+     function plaatsBestelling() {
+       const naam = document.getElementById("naam").value;
+       const drankje = document.getElementById("drankje").value;
+       const vervoer = document.getElementById("vervoer").value;
+       const extras = Array.from(document.querySelectorAll('.extras input:checked')).map(e => e.value);
+       const email = document.getElementById("email").value;
+ 
+       if (!naam) {
+         alert("Vul je naam in.");
+         return;
+       }
+ 
+       if (!navigator.geolocation) {
+         alert("Locatie wordt niet ondersteund.");
+         return;
+       }
+ 
+       navigator.geolocation.getCurrentPosition((pos) => {
+         const lat = pos.coords.latitude;
+         const lon = pos.coords.longitude;
+         const snelheid = vervoer === "auto" ? 50 : 15;
+         const afstand = haversine(lat, lon, bestemmingLat, bestemmingLon);
+         const tijdUren = afstand / snelheid;
+         const aankomst = new Date(Date.now() + tijdUren * 60 * 60 * 1000);
+         const tijdStr = aankomst.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
+ 
+         const resultaat = document.getElementById("resultaat");
+         resultaat.innerHTML = `
+           <strong>Bedankt, ${naam}!</strong><br>
+           Je hebt een <strong>${drankje}</strong> besteld${extras.length > 0 ? ' met ' + extras.join(', ') : ''}.<br>
+           We verwachten je rond <strong>${tijdStr}</strong>.<br><br>
+           Tot zo bij Nijverheidsweg 8 in Ten Boer!
+         `;
+         resultaat.style.display = "block";
+ 
+ 
+         const bestelling = {
+           naam: naam,
+           drankje: drankje,
+           extras: extras,
+           vervoer: vervoer,
+           aankomsttijd: tijdStr,
+           email: email 
+         };
+ 
+         fetch("https://script.google.com/macros/s/AKfycbwp1jC3mkexpf4p-tzjUGDEMNFfgZvuhzvgXqf5v7rg6_TjBssC_HenM9n51oGdrHi7/exec", {
+           method: "POST",
+           mode: "no-cors",
+           headers: {
+             "Content-Type": "application/json"
+           },
+           body: JSON.stringify(bestelling)
+         });
+       }, () => {
+         alert("Kon je locatie niet ophalen.");
+       });
+     }
+ 
+     function haversine(lat1, lon1, lat2, lon2) {
+       const R = 6371;
+       const dLat = (lat2 - lat1) * Math.PI / 180;
+       const dLon = (lon2 - lon1) * Math.PI / 180;
+       const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                 Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                 Math.sin(dLon/2) * Math.sin(dLon/2);
+       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+       return R * c;
+     }
+   </script>
+ </body>
